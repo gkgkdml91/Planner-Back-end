@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.planner.member.mapper.MemberMapper">
+
+    <select id="findById" resultType="com.planner.member.model.Member">
+        SELECT * FROM member WHERE id = #{id}
+    </select>
+	
+	<!-- 회원 등록 -->
+    <insert id="insertMember"> 
+	    INSERT INTO member(name, email, phone, pw)
+	    VALUES(#{name}, #{email}, #{phone}, #{pw})
+	</insert>
+
+    <select id="findByEmailAndPassword" resultType="com.planner.member.model.Member">
+        SELECT * FROM member
+        WHERE email = #{email}
+        AND pw = #{pw}
+    </select>
+
+	<select id="findByEmail" resultType="com.planner.member.model.Member">
+	    SELECT * FROM member WHERE email = #{email}
+	</select>
+	
+	<!-- 회원 정보 수정 -->
+	<update id="updateMember" parameterType="com.planner.member.model.Member">
+	    UPDATE member
+	    SET name = #{name},
+	        pw = #{pw},
+	        phone = #{phone},
+	     	profile = #{profile},
+	     	updated_at = #{updated_at}
+	    WHERE email = #{email}
+	</update>
+
+    <select id="countByNameEmailPhone" resultType="int">
+        SELECT COUNT(*)
+        FROM member
+        WHERE name = #{name}
+          AND email = #{email}
+          AND phone = #{phone}
+    </select>
+	
+	<!-- 회원 정보 아이디 찾기 -->
+	<select id="selectEmailByNameAndPhone" resultType="String">
+        SELECT email
+        FROM member
+        WHERE name = #{name}
+          AND phone = #{phone}
+        LIMIT 1
+    </select>
+    
+	<!-- 비밀번호 찾기 위해서 일단 검색 -->
+    <select id="findByAll" resultType="com.planner.member.model.Member">
+	    SELECT * FROM member
+	    WHERE name = #{name}
+	      AND email = #{email}
+	      AND phone = #{phone}
+	    LIMIT 1
+	</select>
+	
+	<!-- 재발급 되는 비밀번호 -->
+	<update id="updatePassword">
+	  UPDATE member
+	  SET pw = #{pw}
+	  WHERE id = #{id}
+	</update>
+</mapper>
